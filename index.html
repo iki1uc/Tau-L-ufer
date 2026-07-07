@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Scan-Ghost – Productivity Mode</title>
+    <link rel="stylesheet" href="ghost.css">
+</head>
+<body>
+
+<h2>Scan-Ghost – Productivity Mode</h2>
+
+<div id="status" class="ghost-box">
+    Starte Produktiv-Scan…
+</div>
+
+<script type="module">
+
+const repos = [
+    { name: "BOERSE", url: "https://iki1uc.github.io/BOERSE/" },
+    { name: "MARKT-Daten", url: "https://raw.githubusercontent.com/iki1uc/BOERSE/main/MARKT/marketData.js" },
+    { name: "SCAN81", url: "https://raw.githubusercontent.com/iki1uc/BOERSE/main/MARKT/SCAN81/scanEVO.js" },
+    { name: "ID-GATE", url: "https://iki1uc.github.io/BOERSE/ID.html" }
+];
+
+async function scanProductive() {
+    let out = "Produktiv-Scan ✓\n\n";
+
+    for (const r of repos) {
+        try {
+            const res = await fetch(r.url);
+            out += `${r.name}: ${res.ok ? "ONLINE ✓" : "ERROR ✗"} (${res.status})\n`;
+        } catch (err) {
+            out += `${r.name}: EXCEPTION ✗ (${err.message})\n`;
+        }
+    }
+
+    document.getElementById("status").textContent = out;
+}
+
+scanProductive();
+setInterval(scanProductive, 3000);
+
+</script>
+
+<style>
+.ghost-box {
+    padding: 20px;
+    background: #111;
+    color: #0f0;
+    font-size: 18px;
+    border: 1px solid #555;
+    white-space: pre-wrap;
+    border-radius: 6px;
+    margin-bottom: 20px;
+    font-family: monospace;
+}
+</style>
+
+</body>
+</html>
